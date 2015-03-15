@@ -62,7 +62,13 @@ div.logo form.pure-form button{
 	font-size: 130%;
 }
 
+#showOnClick {
+	padding: 10px;
+}
 
+#query {
+	padding: 10px;
+}
 
 .myButton {
 	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;

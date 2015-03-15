@@ -1,26 +1,68 @@
-<head>
-	<link rel="stylesheet" type="text/css" href="google.css">
-	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
-</head>
+	<head>
+		<link rel="stylesheet" type="text/css" href="google.css">
+		<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+	</head>
+	<body>
+		<script>
+			var myDataRef = new Firebase('https://sweltering-torch-4335.firebaseio.com/');
+			$(document).ready(function() {
 
-<ul class="topnav">
-	<li><a href="#">Images</a></li>
-	<li><a href="#">Gmail</a></li>
-	<li id="topnavright"><a href="#">+Amol</a></li>
-</ul>
+				// Show/hide search info
+				$('#query').hide();
+				$('#showOnClick').hide();
 
-<div class="logo">
-	<img src="google.png">
-	<form class="pure-form">
-		<input class="pure-input-rounded" type="text" placeholder="Enter search query here" size="50px">
-	</form>
-	<form class="pure-form">
-		<a href="#" class="myButton">I'm feeling lucky!</a>
-	</form>
-	<form class="pure-form">
-		<a href="#" class="myButton">Search</a>	
-	</form>
+				// Enter keypress functionality
+				$('#searchInput').keypress(function (e){
+					var key = e.which;
+						if(key == 13) // the enter key code
+						{
+							$('#searchButton').click();
+							return false;
+						}
+					})
 
-	
-</div>
+				// Search onClick() handler
+				$('#searchButton').click(function (){
+					var searchField = $('#searchInput').val();
+					myDataRef.push(searchField);
+					$('#query').text(searchField)
+					$('#query').fadeIn().delay(800).fadeOut();
+					$('#showOnClick').fadeIn().delay(800).fadeOut();
+
+
+				})});
+
+			// Retrieve search query from firebase
+			myDataRef.on('child_added', function(snapshot) {
+				var message = snapshot.val();
+				console.log(message);
+			})
+
+		</script>
+
+		<ul class="topnav">
+			<li><a href="#">Images</a></li>
+			<li><a href="#">Gmail</a></li>
+			<li id="topnavright"><a href="#">+Amol</a></li>
+		</ul>
+
+		<div class="logo">
+			<img src="google.png">
+			<form class="pure-form">
+				<input class="pure-input-rounded" type="text" placeholder="Enter search query here" size="50px" id='searchInput'>
+			</form>
+			<form class="pure-form">
+				<a href="#" class="myButton">I'm feeling lucky!</a>
+			</form>
+			<form class="pure-form">
+				<a href="#" class="myButton" id='searchButton'>Search</a>	
+			</form>
+
+
+		</div>
+		<div id="showOnClick"> Fetching from firebase... You searched for: </div>
+		<div id="query"></div>
+	</body>
 
